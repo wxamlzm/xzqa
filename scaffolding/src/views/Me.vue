@@ -5,20 +5,6 @@
       <div slot="left">返回</div>
       <div slot="right">分享</div>
     </mt-header>
-    <!-- 导航栏 -->
-    <!-- <mt-navbar v-model="selected">
-      <mt-tab-item id="1">推荐</mt-tab-item>
-      <mt-tab-item id="2">科技</mt-tab-item>
-      <mt-tab-item id="3">数码</mt-tab-item>
-    </mt-navbar> -->
-    <!-- 切换面板 -->
-    <!-- <mt-tab-container v-model="selected">
-      <mt-tab-container-item id="1">
-        <p v-for="i in 60" :key="i"> 推荐面板{{i}}</p>
-      </mt-tab-container-item>
-      <mt-tab-container-item id="2">科技面板</mt-tab-container-item>
-      <mt-tab-container-item id="3">数码面板</mt-tab-container-item>
-    </mt-tab-container>   -->
     <!-- 底部选项卡 -->
     <mt-tabbar v-model="tabactive" fixed>
       <mt-tab-item id="shouye">
@@ -50,6 +36,5 @@ export default {
       }
     }
   }
-
 }
 </script>

@@ -24,12 +24,13 @@ export default {
       height: '210px'
     }
   },
+  
   mounted(){
     let pich = 1242;
     let picw = 698;
     let screenw = window.screen.width;
 
-    this.height = (pich * `${screenw}` / picw) + 'px';
+    this.height = (picw * `${screenw}` / pich) + 'px';
   }
 }
 </script>

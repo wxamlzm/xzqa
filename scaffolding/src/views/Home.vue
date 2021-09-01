@@ -7,17 +7,16 @@
     </mt-header>
     <!-- 导航栏 -->
     <mt-navbar class="nav" v-model="selected" fixed>
-      <mt-tab-item id="1">推荐</mt-tab-item>
-      <mt-tab-item id="2">科技</mt-tab-item>
-      <mt-tab-item id="3">数码</mt-tab-item>
+      <mt-tab-item v-for = "(item, i) in cats" :key="i" :id="`${item.id}`">
+        {{item.category_name}}
+      </mt-tab-item>
     </mt-navbar>
     <!-- 切换面板 -->
-    <mt-tab-container class="tab-container" v-model="selected">
-      <mt-tab-container-item id="1">
+    <mt-tab-container class="tab-container">
+      <mt-tab-container-item>
         <swipe></swipe>
+        <article-item :selected = "selected"></article-item>
       </mt-tab-container-item>
-      <mt-tab-container-item id="2">科技面板</mt-tab-container-item>
-      <mt-tab-container-item id="3">数码面板</mt-tab-container-item>
     </mt-tab-container>  
     <!-- 底部选项卡 -->
     <mt-tabbar v-model="tabactive" fixed>
@@ -36,14 +35,20 @@
 
 <script>
 import Swipe from "@/components/Swipe.vue"
+import ArticleItem from "@/components/ArticleItem.vue"
+import axios from "axios"
+
 export default {
   components:{
-    Swipe
+    Swipe,
+    ArticleItem
   },
+  // props:['selected'],
   data(){
     return{
       selected: '1',
-      tabactive: 'shouye'
+      tabactive: 'shouye',
+      cats: []
     }
   },
   watch:{
@@ -53,6 +58,11 @@ export default {
         this.$router.push('/me');
       }
     }
+  },
+  mounted(){
+    axios.get('/category').then(result => {
+      this.cats = result.data.results;
+    })
   }
 }
 </script>
