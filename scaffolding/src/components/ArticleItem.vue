@@ -35,11 +35,11 @@ export default {
     };
   },
   watch:{
-    selected(){
-      console.log(this.selected);
+    selected(newVal){
+      console.log(newVal);
       // 发送http请求，获取UI类别下
       axios.get('/articles',{
-        params:{cid:this.selected, page:this.selected}
+        params:{cid:newVal, page:newVal}
       }).then(result => {
         this.article = result.data.results;
         console.log(this.article);
