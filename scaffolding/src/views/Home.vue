@@ -12,10 +12,13 @@
       </mt-tab-item>
     </mt-navbar>
     <!-- 切换面板 -->
-    <mt-tab-container class="tab-container">
+    <mt-tab-container class="tab-container" 
+                      v-infinite-scroll = 'loadMore'
+                      :infinite-scroll-disabled = 'loading'>
       <mt-tab-container-item>
         <swipe></swipe>
-        <article-item :selected = "selected"></article-item>
+        <article-item :selected = "selected" 
+                      :article = "article"></article-item>
       </mt-tab-container-item>
     </mt-tab-container>  
     <!-- 底部选项卡 -->
@@ -43,14 +46,43 @@ export default {
     Swipe,
     ArticleItem
   },
-  // props:['selected'],
+
   data(){
     return{
       selected: '1',
       tabactive: 'shouye',
-      cats: []
+      // 存放从数据库获取的当前页面的分页类型
+      cats: [],
+      // 限制无限滑动的首屏加载
+      loading: true,
+      // 存放当页的文章类型数据
+      article: [],
+      // 存储当前的内容页数
+      page: 1
     }
   },
+
+  methods:{
+    loadMore(){
+      // 先解锁无限滑动的开关
+      this.loading = false;
+      // 测试代码
+      console.log('到底了');
+      // 在触底的同时，发送请求从上数据库获取下一页的内容，并将下一页内容追加到当前内容中，做页面内容渲染
+      // 获取对应类别
+      var cid = this.selected;
+      // 获取下一页
+      this.page++;
+      axios.get('/articles', {params:{cid:`${cid}`, page:this.page}})
+      .then(result => {
+        console.log(result);
+        this.loading = true;
+        // 追加到article中
+        this.article.push(...result.data.results);
+      })
+    }
+  },
+
   watch:{
     // 监听tabactive的变化，将会传入两个参数
     tabactive(newval, oldval){
@@ -59,11 +91,20 @@ export default {
       }
     }
   },
+
   mounted(){
+    // 发送http请求，获取UI类别，并赋值给数组，用于显示nav
     axios.get('/category').then(result => {
       this.cats = result.data.results;
+    });
+
+    // 发送http请求，获取当前nav对应的类目下的文章
+    axios.get('/articles',{ params:{cid:this.selected, page:this.page}})
+    .then(result => {
+      this.article = result.data.results;
+      console.log(result);
     })
-  }
+  },
 }
 </script>
 

@@ -1,21 +1,23 @@
 <template>
   <div class="test">
     <h1>测试页面</h1>
-    <emit-test></emit-test>
-    <blog-post v-on:enlarge-text = "postFontSize += $event"></blog-post>
+    <article-item :selected = "1"></article-item>
   </div>
 </template>
 
 <script>
-import EmitTest from '@/components/testing/EmitTest.vue'
+// import Inf from '@/components/testing/Inf.vue'
+import ArticleItem from '@/components/ArticleItem.vue'
 
 export default {
+  name: "Test",
   components:{
-    EmitTest
+    // Inf
+    ArticleItem
   },
   data(){
     return{
-      postFontSize: 1
+
     }
   }
 }

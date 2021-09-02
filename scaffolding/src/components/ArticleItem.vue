@@ -1,7 +1,9 @@
 <template>
   <div>
     <!-- 单一文章信息开始 -->
-    <div class="articleItem" v-for = "(item, i) in article" :key = "i">
+    <div class="articleItem" 
+         v-for = "(item, i) in article" 
+         :key = "i" >
       <!-- 文章标题开始 -->
       <div class="articleItem-header">{{item.subject}}</div>
       <!-- 文章标题结束 -->
@@ -27,13 +29,17 @@ import axios from 'axios'
 
 export default {
   name: "ArticleItem",
-  props:["selected"],
-  data() {
-    return {
+  
+  props:["selected", "article"],
+
+  data(){
+    return{
       navactive: "1",
-      article: [] // 存放当页的文章类型数据
+      page: this.selected,
+      show: false
     };
   },
+
   watch:{
     selected(newVal){
       console.log(newVal);
@@ -46,18 +52,9 @@ export default {
       })
     }
   },
-  mounted(){
-    console.log(this.selected);
-    // 发送http请求，获取UI类别下
-    axios.get('/articles',{
-      params:{cid:this.selected, page:this.selected}
-    }).then(result => {
-      this.article = result.data.results;
-      console.log(this.article);
-    })
-  }
 };
 </script>
+
 <style scoped>
 .articleItem {
   padding: 10px 0;

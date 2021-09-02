@@ -25,36 +25,6 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/header',
-    name: 'Header',
-    component: () => import(/* webpackChunkName: "header" */ '../views/testing/Header.vue')
-  },
-  {
-    path: '/field',
-    name: 'Field',
-    component: () => import(/* webpackChunkName: "field" */ '../views/testing/Field.vue')
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: () => import(/* webpackChunkName: "register" */ '../views/testing/Register.vue')
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import(/* webpackChunkName: "login" */ '../views/testing/Login.vue')
-  },
-  {
-    path: '/nav',
-    name: 'Nav',
-    component: () => import(/* webpackChunkName: "nav" */ '../views/testing/Nav.vue')
-  },
-  {
-    path: '/tabbar',
-    name: 'Tabbar',
-    component: () => import(/* webpackChunkName: "tabbar" */ '../views/testing/Tabbar.vue')
-  },
-  {
     path: '/me',
     name: 'Me',
     component: () => import(/* webpackChunkName: "me" */ '../views/Me.vue')
