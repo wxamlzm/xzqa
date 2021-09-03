@@ -14,7 +14,8 @@
     <!-- 切换面板 -->
     <mt-tab-container class="tab-container" 
                       v-infinite-scroll = 'loadMore'
-                      :infinite-scroll-disabled = 'loading'>
+                      :infinite-scroll-disabled = 'loading'
+                      infinite-scroll-immediate-check = 'true'>
       <mt-tab-container-item>
         <swipe></swipe>
         <article-item :selected = "selected" 
@@ -25,12 +26,12 @@
     <mt-tabbar v-model="tabactive" fixed>
       <mt-tab-item id="shouye">
         <!-- tabactive 如果是shouye 那就是1，不是那就是0 -->
-        <img v-if="tabactive=='shouye'" src="@/assets/main_1.png" slot="icon">
-        <img v-else src="@/assets/main_0.png" slot="icon">
+        <img v-if="tabactive=='shouye'" src="@/assets/img/main_1.png" slot="icon">
+        <img v-else src="@/assets/img/main_0.png" slot="icon">
         首页</mt-tab-item>
       <mt-tab-item id="wode">
-        <img v-if="tabactive=='wode'" src="@/assets/me_1.png" slot="icon">
-        <img v-else src="@/assets/me_0.png" slot="icon">
+        <img v-if="tabactive=='wode'" src="@/assets/img/me_1.png" slot="icon">
+        <img v-else src="@/assets/img/me_0.png" slot="icon">
         我的</mt-tab-item>
     </mt-tabbar>
   </div>
@@ -39,12 +40,14 @@
 <script>
 import Swipe from "@/components/Swipe.vue"
 import ArticleItem from "@/components/ArticleItem.vue"
+import { loadArticles } from "@/assets/js/loadArticles.js"
 import axios from "axios"
 
 export default {
   components:{
     Swipe,
-    ArticleItem
+    ArticleItem,
+    loadArticles
   },
 
   data(){
@@ -58,27 +61,40 @@ export default {
       // 存放当页的文章类型数据
       article: [],
       // 存储当前的内容页数
-      page: 1
+      page: 1,
     }
   },
 
   methods:{
+    loadArticles(cid, page, callback){
+      // 弹出等待框
+      this.$indicator.open({
+        text: '加载中',
+        spinnerType: 'triple-bounce'
+      });
+
+      axios.get('/articles', {params:{cid:cid, page:page}})
+      .then(result => {
+        callback(result.data.results);
+        this.$indicator.close();
+      })
+    },
     loadMore(){
       // 先解锁无限滑动的开关
       this.loading = false;
       // 测试代码
       console.log('到底了');
       // 在触底的同时，发送请求从上数据库获取下一页的内容，并将下一页内容追加到当前内容中，做页面内容渲染
-      // 获取对应类别
-      var cid = this.selected;
+      // 当前所在的类别
+      var cid = this.selected
       // 获取下一页
       this.page++;
-      axios.get('/articles', {params:{cid:`${cid}`, page:this.page}})
-      .then(result => {
-        console.log(result);
+
+      this.loadArticles(cid, this.page, articleList => {
+       // 重新关闭开关
         this.loading = true;
         // 追加到article中
-        this.article.push(...result.data.results);
+        this.article.push(...articleList);
       })
     }
   },
@@ -98,11 +114,10 @@ export default {
       this.cats = result.data.results;
     });
 
-    // 发送http请求，获取当前nav对应的类目下的文章
-    axios.get('/articles',{ params:{cid:this.selected, page:this.page}})
-    .then(result => {
-      this.article = result.data.results;
-      console.log(result);
+    var cid = this.selected;
+
+    this.loadArticles(cid, this.page, articleList => {
+      this.article = articleList;
     })
   },
 }

@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="articleitem">
     <!-- 单一文章信息开始 -->
-    <div class="articleItem" 
-         v-for = "(item, i) in article" 
+    <div v-for = "(item, i) in articleList" 
          :key = "i" >
+      <router-link :to="`/article`">
       <!-- 文章标题开始 -->
       <div class="articleItem-header">{{item.subject}}</div>
       <!-- 文章标题结束 -->
@@ -19,6 +19,7 @@
         <!-- 文章简介结束 -->
       </div>
       <!-- 文章图文信息结束 -->
+      </router-link>
     </div>
     <!-- 单一文章信息结束 -->
   </div>
@@ -35,8 +36,7 @@ export default {
   data(){
     return{
       navactive: "1",
-      page: this.selected,
-      show: false
+      show: false,
     };
   },
 
@@ -52,6 +52,15 @@ export default {
       })
     }
   },
+  computed: {
+    articleList: function(){
+      return this.article
+    },
+    page: function(){
+      return this.selected
+    }
+
+  }
 };
 </script>
 

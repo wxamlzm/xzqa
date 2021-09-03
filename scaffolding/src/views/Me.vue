@@ -9,12 +9,12 @@
     <mt-tabbar v-model="tabactive" fixed>
       <mt-tab-item id="shouye">
         <!-- tabactive 如果是shouye 那就是1，不是那就是0 -->
-        <img v-if="tabactive=='shouye'" src="@/assets/main_1.png" slot="icon">
-        <img v-else src="@/assets/main_0.png" slot="icon">
+        <img v-if="tabactive=='shouye'" src="@/assets/img/main_1.png" slot="icon">
+        <img v-else src="@/assets/img/main_0.png" slot="icon">
         首页</mt-tab-item>
       <mt-tab-item id="wode">
-        <img v-if="tabactive=='wode'" src="@/assets/me_1.png" slot="icon">
-        <img v-else src="@/assets/me_0.png" slot="icon">
+        <img v-if="tabactive=='wode'" src="@/assets/img/me_1.png" slot="icon">
+        <img v-else src="@/assets/img/me_0.png" slot="icon">
         我的</mt-tab-item>
     </mt-tabbar>
   </div>

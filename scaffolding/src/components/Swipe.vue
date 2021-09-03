@@ -4,13 +4,13 @@
               :auto = "3000"
               :showIndicators = "true">
       <mt-swipe-item>
-        <img src="/1.jpg" alt="">
+        <img src="/img/banner/1.jpg" alt="">
       </mt-swipe-item>
       <mt-swipe-item>
-        <img src="/2.jpg" alt="">
+        <img src="/img/banner/2.jpg" alt="">
       </mt-swipe-item>
       <mt-swipe-item>
-        <img src="/3.jpg" alt="">
+        <img src="/img/banner/3.jpg" alt="">
       </mt-swipe-item>
     </mt-swipe>
   </div>

@@ -29,6 +29,16 @@ const routes = [
     name: 'Me',
     component: () => import(/* webpackChunkName: "me" */ '../views/Me.vue')
   },
+  {
+    // 路由传参的方式目前掌握的是两种
+    // 以?号为分界，以&为连接符
+    // /article?cid=1&pwd=2
+    // restful方式
+    // /article/5
+    path: '/article',
+    name: 'Article',
+    component: () => import(/* webpackChunkName: "me" */ '../views/Article.vue')
+  },
 ]
 
 const router = new VueRouter({

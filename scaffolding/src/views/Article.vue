@@ -23,7 +23,7 @@
             <!-- 标题结束 -->
             <!-- 作者信息开始 -->
             <div class="author-info">
-                <img src="../assets/images/avatar/04375056d548c1000001490d3b7ef6.jpg@80w_80h_1c_1e_1o_100sh.jpg" class="author-info-avatar">
+                <img src="/img/avatar/0.jpg" class="author-info-avatar">
                 <div class="author-info-detail">
                     <div class="author-info-nickname">淘气的松鼠</div>
                     <div class="author-info-badge">
@@ -48,6 +48,18 @@
         </div>
     </div>
 </template>
+
+<script>
+export default {
+    // 在访问到该页面的时候，根据传入的参数，
+    // 向服务器请求对应的数据
+    // 并绑定在对应的元素内
+    mounted(){
+        console.log(this.$route);
+    }
+}
+</script>
+
 <style scoped>
 .article{
     background: #f6f6f6;
