@@ -40,14 +40,12 @@
 <script>
 import Swipe from "@/components/Swipe.vue"
 import ArticleItem from "@/components/ArticleItem.vue"
-import { loadArticles } from "@/assets/js/loadArticles.js"
 import axios from "axios"
 
 export default {
   components:{
     Swipe,
     ArticleItem,
-    loadArticles
   },
 
   data(){
@@ -79,6 +77,7 @@ export default {
         this.$indicator.close();
       })
     },
+    // 当ui定义事件触发时
     loadMore(){
       // 先解锁无限滑动的开关
       this.loading = false;
@@ -90,12 +89,29 @@ export default {
       // 获取下一页
       this.page++;
 
-      this.loadArticles(cid, this.page, articleList => {
+      var showArticleList = articleList => {
        // 重新关闭开关
         this.loading = true;
         // 追加到article中
         this.article.push(...articleList);
-      })
+      }
+      
+      this.loadArticles(cid, this.page, showArticleList)
+    },
+    // 初始化时载入article
+    initArticle(){
+      // 发送http请求，获取UI类别，并赋值给数组，用于显示nav
+      axios.get('/category').then(result => {
+        this.cats = result.data.results;
+      });
+
+      var cid = this.selected;
+
+      var showArticleList = articleList => {
+        this.article = articleList;
+      }
+
+      this.loadArticles(cid, this.page, showArticleList)
     }
   },
 
@@ -109,16 +125,7 @@ export default {
   },
 
   mounted(){
-    // 发送http请求，获取UI类别，并赋值给数组，用于显示nav
-    axios.get('/category').then(result => {
-      this.cats = result.data.results;
-    });
-
-    var cid = this.selected;
-
-    this.loadArticles(cid, this.page, articleList => {
-      this.article = articleList;
-    })
+     this.initArticle()
   },
 }
 </script>
