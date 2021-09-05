@@ -77,16 +77,16 @@ export default {
 	methods: {
 		// 从服务器获取article数据，并绑定每次获取时的等待框
 		loadArticles(cid, page, callback) {
-			// 弹出等待框
-			this.$indicator.open({
-			text: "加载中",
-			spinnerType: "triple-bounce",
+				// 弹出等待框
+				this.$indicator.open({
+				text: "加载中",
+				spinnerType: "triple-bounce",
 			});
 			// 向服务器请求数据，并接收
 			axios.get("/articles", { params: { cid , page} })
 			.then(result => {
 				// 测试
-				console.log(result);
+				// console.log(result);
 				// 执行接收数据后各自的业务逻辑
 				callback(result.data.results);
 				// 关闭弹出框
@@ -131,19 +131,19 @@ export default {
 		},
   },
 
-  watch: {
-    // 监听tabactive的变化，将会传入两个参数
-    tabactive(newval, oldval) {
-      if (newval == "wode") {
-        this.$router.push("/me");
-      }
-    },
-  },
+watch: {
+	// 监听tabactive的变化，将会传入两个参数
+	tabactive(newval, oldval) {
+		if (newval == "wode") {
+		this.$router.push("/me");
+		}
+	},
+},
 
-  mounted() {
-    this.initNav();
-	this.initArticleList();
-  },
+	mounted() {
+		this.initNav();
+		this.initArticleList();
+	},
 };
 </script>
 
