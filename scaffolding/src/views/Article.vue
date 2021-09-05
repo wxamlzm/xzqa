@@ -14,7 +14,7 @@
             <!-- 标题开始 -->
             <div class="question-header">
                 <div class="question-header-title">
-                   标题
+                   {{this.articleDetails.subject}}
                 </div>
                 <div class="question-header-datetime">
                    2020年11月30日16:49
@@ -25,7 +25,7 @@
             <div class="author-info">
                 <img src="/img/avatar/0.jpg" class="author-info-avatar">
                 <div class="author-info-detail">
-                    <div class="author-info-nickname">淘气的松鼠</div>
+                    <div class="author-info-nickname">{{this.articleDetails.nickname}}</div>
                     <div class="author-info-badge">
                         共<mt-badge type="primary" size="small">123</mt-badge>篇
                     </div>
@@ -35,14 +35,7 @@
             <!-- 作者信息结束 -->
             <!-- 内容开始 -->
             <div class="question-content">
-                <div class="rich-content">
-                    <p>1111</p>
-                    <p>1111</p>
-                    <p>1111</p>
-                    <p>1111</p>
-                    <p>1111</p>
-                    <p>1111</p>
-                </div>
+                <div class="rich-content" v-html = "this.articleDetails.content"></div>
             </div>
             <!-- 内容结束 -->
         </div>
@@ -50,17 +43,32 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
+    data(){
+        return{
+            articleDetails: {}
+        }
+    },
     // 在访问到该页面的时候，根据传入的参数，
     // 向服务器请求对应的数据
     // 并绑定在对应的元素内
     mounted(){
-        console.log(this.$route);
+        // 初始化的时候，通过传过来的id，向数据库发送请求，并进行时数据的对应绑定
+        // 测试
+        console.log(this.$route.query.id);
+        var id = this.$route.query.id;
+        //  通过数据库和路由比对，确认传参为id，路径为detail来获取 文章详情并绑定
+        axios.get('/detail', {params: {id}})
+        .then( result => {
+            this.articleDetails = result.data.result;
+            console.log(result.data.result)
+            });
     }
 }
 </script>
 
-<style scoped>
+<style>
 .article{
     background: #f6f6f6;
     height: 100vh;

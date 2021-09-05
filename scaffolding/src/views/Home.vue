@@ -7,134 +7,151 @@
     </mt-header>
     <!-- 导航栏 -->
     <mt-navbar class="nav" v-model="selected" fixed>
-      <mt-tab-item v-for = "(item, i) in cats" :key="i" :id="`${item.id}`">
-        {{item.category_name}}
+      <mt-tab-item v-for="(item, i) in cats" :key="i" :id="`${item.id}`">
+        {{ item.category_name }}
       </mt-tab-item>
     </mt-navbar>
     <!-- 切换面板 -->
-    <mt-tab-container class="tab-container" 
-                      v-infinite-scroll = 'loadMore'
-                      :infinite-scroll-disabled = 'loading'
-                      infinite-scroll-immediate-check = 'true'>
+    <mt-tab-container
+      class="tab-container"
+      v-infinite-scroll="loadMoreArticle"
+      :infinite-scroll-disabled="loading"
+      infinite-scroll-immediate-check="true"
+    >
       <mt-tab-container-item>
         <swipe></swipe>
-        <article-item :selected = "selected" 
-                      :article = "article"></article-item>
+        <article-item :selected="selected" :article="article"></article-item>
       </mt-tab-container-item>
-    </mt-tab-container>  
+    </mt-tab-container>
     <!-- 底部选项卡 -->
     <mt-tabbar v-model="tabactive" fixed>
       <mt-tab-item id="shouye">
         <!-- tabactive 如果是shouye 那就是1，不是那就是0 -->
-        <img v-if="tabactive=='shouye'" src="@/assets/img/main_1.png" slot="icon">
-        <img v-else src="@/assets/img/main_0.png" slot="icon">
-        首页</mt-tab-item>
+        <img
+          v-if="tabactive == 'shouye'"
+          src="@/assets/img/main_1.png"
+          slot="icon"
+        />
+        <img v-else src="@/assets/img/main_0.png" slot="icon" />
+        首页</mt-tab-item
+      >
       <mt-tab-item id="wode">
-        <img v-if="tabactive=='wode'" src="@/assets/img/me_1.png" slot="icon">
-        <img v-else src="@/assets/img/me_0.png" slot="icon">
-        我的</mt-tab-item>
+        <img
+          v-if="tabactive == 'wode'"
+          src="@/assets/img/me_1.png"
+          slot="icon"
+        />
+        <img v-else src="@/assets/img/me_0.png" slot="icon" />
+        我的</mt-tab-item
+      >
     </mt-tabbar>
   </div>
 </template>
 
 <script>
-import Swipe from "@/components/Swipe.vue"
-import ArticleItem from "@/components/ArticleItem.vue"
-import axios from "axios"
+import Swipe from "@/components/Swipe.vue";
+import ArticleItem from "@/components/ArticleItem.vue";
+import axios from "axios";
 
 export default {
-  components:{
-    Swipe,
-    ArticleItem,
+	components: {
+		Swipe,
+		ArticleItem,
+	},
+
+	data() {
+		return {
+			selected: "1",
+			tabactive: "shouye",
+			// 存放从数据库获取的当前页面的分页类型
+			cats: [],
+			// 限制无限滑动的首屏加载
+			loading: true,
+			// 存放当页的文章类型数据
+			article: [],
+			// 存储当前的内容页数
+			page: 1,
+		};
+	},
+
+	methods: {
+		// 从服务器获取article数据，并绑定每次获取时的等待框
+		loadArticles(cid, page, callback) {
+			// 弹出等待框
+			this.$indicator.open({
+			text: "加载中",
+			spinnerType: "triple-bounce",
+			});
+			// 向服务器请求数据，并接收
+			axios.get("/articles", { params: { cid , page} })
+			.then(result => {
+				// 测试
+				console.log(result);
+				// 执行接收数据后各自的业务逻辑
+				callback(result.data.results);
+				// 关闭弹出框
+				this.$indicator.close();
+			});
+		},
+
+		// 初始化时载入article
+		initNav() {
+			// 发送http请求，获取UI类别，并赋值给数组，用于显示nav
+			axios.get("/category").then( result=> this.cats = result.data.results);
+		},
+		// 初始化时载入article
+		initArticleList(){
+			var cid = this.selected;
+
+			var showArticleList = articleList =>  this.article = articleList;
+			
+			this.loadArticles(cid, this.page, showArticleList);
+		},
+		// 当ui定义事件触发时
+		loadMoreArticle() {
+			// 先解锁无限滑动的开关
+			this.loading = false;
+			// 测试代码
+			console.log("到底了");
+			// 在触底的同时，发送请求从上数据库获取下一页的内容，并将下一页内容追加到当前内容中，做页面内容渲染
+			// 当前所在的类别
+			var cid = this.selected;
+			// 获取下一页
+			this.page++;
+
+			//  定义将追加的数据添加到现有的列表中，同时指定其渲染形式
+			var showArticleList = (articleList) => {
+				// 重新关闭开关
+				this.loading = true;
+				// 追加到article中
+				this.article.push(...articleList);
+			};
+
+			this.loadArticles(cid, this.page, showArticleList);
+		},
   },
 
-  data(){
-    return{
-      selected: '1',
-      tabactive: 'shouye',
-      // 存放从数据库获取的当前页面的分页类型
-      cats: [],
-      // 限制无限滑动的首屏加载
-      loading: true,
-      // 存放当页的文章类型数据
-      article: [],
-      // 存储当前的内容页数
-      page: 1,
-    }
-  },
-
-  methods:{
-    loadArticles(cid, page, callback){
-      // 弹出等待框
-      this.$indicator.open({
-        text: '加载中',
-        spinnerType: 'triple-bounce'
-      });
-
-      axios.get('/articles', {params:{cid:cid, page:page}})
-      .then(result => {
-        callback(result.data.results);
-        this.$indicator.close();
-      })
-    },
-    // 当ui定义事件触发时
-    loadMore(){
-      // 先解锁无限滑动的开关
-      this.loading = false;
-      // 测试代码
-      console.log('到底了');
-      // 在触底的同时，发送请求从上数据库获取下一页的内容，并将下一页内容追加到当前内容中，做页面内容渲染
-      // 当前所在的类别
-      var cid = this.selected
-      // 获取下一页
-      this.page++;
-
-      var showArticleList = articleList => {
-       // 重新关闭开关
-        this.loading = true;
-        // 追加到article中
-        this.article.push(...articleList);
-      }
-      
-      this.loadArticles(cid, this.page, showArticleList)
-    },
-    // 初始化时载入article
-    initArticle(){
-      // 发送http请求，获取UI类别，并赋值给数组，用于显示nav
-      axios.get('/category').then(result => {
-        this.cats = result.data.results;
-      });
-
-      var cid = this.selected;
-
-      var showArticleList = articleList => {
-        this.article = articleList;
-      }
-
-      this.loadArticles(cid, this.page, showArticleList)
-    }
-  },
-
-  watch:{
+  watch: {
     // 监听tabactive的变化，将会传入两个参数
-    tabactive(newval, oldval){
-      if(newval == 'wode'){
-        this.$router.push('/me');
+    tabactive(newval, oldval) {
+      if (newval == "wode") {
+        this.$router.push("/me");
       }
-    }
+    },
   },
 
-  mounted(){
-     this.initArticle()
+  mounted() {
+    this.initNav();
+	this.initArticleList();
   },
-}
+};
 </script>
 
 <style>
-.nav{
+.nav {
   margin-top: 40px;
 }
-.tab-container{
+.tab-container {
   margin-top: 98px;
   margin-bottom: 70px;
 }
