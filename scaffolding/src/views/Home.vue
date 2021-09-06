@@ -3,7 +3,8 @@
     <!-- 顶部header -->
     <mt-header title="首页" fixed>
       <router-link to="/register" slot="left">注册</router-link>
-      <router-link to="/login" slot="right">登录</router-link>
+      <router-link to="/login" slot="right" v-if = "isLogin">登录</router-link>
+	  <span v-else slot="right">欢迎{{uname}}</span>
     </mt-header>
     <!-- 导航栏 -->
     <mt-navbar class="nav" v-model="selected" fixed>
@@ -52,6 +53,7 @@
 import Swipe from "@/components/Swipe.vue";
 import ArticleItem from "@/components/ArticleItem.vue";
 import axios from "axios";
+import {mapState} from "vuex";
 
 export default {
 	components: {
@@ -71,6 +73,7 @@ export default {
 			article: [],
 			// 存储当前的内容页数
 			page: 1,
+			isLogin: this.uname != ''
 		};
 	},
 
@@ -95,7 +98,7 @@ export default {
 		},
 
 		// 初始化时载入article
-		initNav() {
+		initNav(){
 			// 发送http请求，获取UI类别，并赋值给数组，用于显示nav
 			axios.get("/category").then( result=> this.cats = result.data.results);
 		},
@@ -108,11 +111,9 @@ export default {
 			this.loadArticles(cid, this.page, showArticleList);
 		},
 		// 当ui定义事件触发时
-		loadMoreArticle() {
+		loadMoreArticle(){
 			// 先解锁无限滑动的开关
 			this.loading = false;
-			// 测试代码
-			console.log("到底了");
 			// 在触底的同时，发送请求从上数据库获取下一页的内容，并将下一页内容追加到当前内容中，做页面内容渲染
 			// 当前所在的类别
 			var cid = this.selected;
@@ -129,20 +130,27 @@ export default {
 
 			this.loadArticles(cid, this.page, showArticleList);
 		},
-  },
+  	},
 
-watch: {
-	// 监听tabactive的变化，将会传入两个参数
-	tabactive(newval, oldval) {
-		if (newval == "wode") {
-		this.$router.push("/me");
-		}
+	watch: {
+		// 监听tabactive的变化，将会传入两个参数
+		tabactive(newval, oldval) {
+			if (newval == "wode") {
+			this.$router.push("/me");
+			}
+		},
 	},
-},
+	computed: {
+		...mapState(["uname"])
+	},
 
-	mounted() {
+	mounted(){
 		this.initNav();
 		this.initArticleList();
+		console.log(`已设置isLogin: this.uname != ''`);
+		console.log(`console.log(this.uname) => ${this.uname}`);
+		console.log(`console.log(this.uname != '') => ${this.uname != ''}`);
+
 	},
 };
 </script>

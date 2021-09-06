@@ -1,9 +1,9 @@
 <template>
   <div class = "register">
     <!-- 标题栏 -->
-    <mt-header title = "注册">
-      <mt-button icon = "back" slot = "left"></mt-button>
-      <router-link to = "/login" slot = "right">登录</router-link>
+    <mt-header title = "登录">
+      <mt-button icon = "back" slot = "left" @click = "goHome"></mt-button>
+      <router-link to = "/register" slot = "right">注册</router-link>
     </mt-header>
     <!-- 表单组件 -->
     <mt-field type = "text"
@@ -19,19 +19,16 @@
               v-model = "upwd.val"
               :state = "upwd.state"
               @blur.native.capture="checkPwd"></mt-field>
-    <mt-field type = "password"
-              placeholder = "请再次输入密码"
-              label = "确认密码"
-              v-model = "reupwd.val"
-              :state = "reupwd.state"
-              @blur.native.capture="checkRepwd"></mt-field>
-    <!-- 注册按钮 -->
-    <mt-button type = "primary" size = "large" @click = "checkForm">
-      免费注册
+    <!-- 登录按钮 -->
+    <mt-button type = "primary" size = "large" @click = "goLogin">
+      登录
     </mt-button>
   </div>
 </template>
 <script>
+import axios from 'axios'
+import {mapMutations} from "vuex"
+
 export default ({
   data(){
     return{
@@ -42,23 +39,12 @@ export default ({
       upwd:{
         val: '',
         state: ''
-      },
-      reupwd:{
-        val: '',
-        state: ''
       }
     }
   },
   methods:{
-    turnState(reg, obj){
-      if(reg.test(obj.val)){
-        // 合法 state success
-        obj.state = "success";
-      }else{
-        // 不合法 state error
-        obj.state = "error";
-      }
-    },
+    ...mapMutations(["setUname"]),
+
     // 验证用户名
     checkName(){
       // 通过正则表达式， 验证value是否符合要求
@@ -87,25 +73,36 @@ export default ({
         return false;
       }
     },
-    // 验证再次输入的密码
-    checkRepwd(){
-      let reg = /^\d{6}$/;
-      if(reg.test(this.reupwd.val) && this.reupwd.val == this.upwd.val){
-        // 合法并且两次密码相同 state success
-        this.reupwd.state = "success";
-        return true;
-      }else{
-        // 不合法 或者 两次密码不相同 state success
-        this.reupwd.state = "error";
-        return false;
-      }
-    },
     checkForm(){  // 验证表单 验证3个Field组件是否合法
       // 验证用户名
-      if(this.checkName() && this.checkPwd() && this.checkRepwd()){
-        console.log('注册成功')
+      if(this.checkName() && this.checkPwd()){
+        console.log('登录成功')
       }
-    }
+    },
+    // 回首页
+    goHome(){
+      this.$router.push('/');
+    },
+    // 向数据库发送post请求检验是否符合；
+    // 登录成功后页面跳转，并带着在本页面输入的用户名，到首页，并在首页可以获取到
+    goLogin(){
+      axios.post('login', `username=${this.uname.val}&password=${this.upwd.val}`)
+      .then(result => {
+        if(200 == result.data.code){
+          alert(result.data.message);
+          this.setUname(this.uname.val);
+          // 同时存一个副本在localstorage中
+          let ss = window.sessionStorage;
+          ss.setItem('uname', `${this.uname.val}`);
+          this.goHome();
+        }else if(201 == result.data.code){
+          alert(result.data.message)
+        }else{
+          alert("未知错误，请重新尝试")
+        }
+      });
+    },
+
   }
 })
 </script>

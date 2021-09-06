@@ -30,14 +30,19 @@ const routes = [
     component: () => import(/* webpackChunkName: "me" */ '../views/Me.vue')
   },
   {
-    // 路由传参的方式目前掌握的是两种
-    // 以?号为分界，以&为连接符
-    // /article?cid=1&pwd=2
-    // restful方式
-    // /article/5
     path: '/article',
     name: 'Article',
-    component: () => import(/* webpackChunkName: "me" */ '../views/Article.vue')
+    component: () => import(/* webpackChunkName: "Article" */ '../views/Article.vue')
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import(/*webpackChunkName: "Login"*/ '../views/Login.vue')
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import(/*webpackChunkName: "register"*/ '../views/Register.vue')
   },
 ]
 
