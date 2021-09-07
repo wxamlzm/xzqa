@@ -54,11 +54,13 @@ import Swipe from "@/components/Swipe.vue";
 import ArticleItem from "@/components/ArticleItem.vue";
 import axios from "axios";
 import {mapState} from "vuex";
+import {loadArticles} from "@/assets/js/loadArticles.js"
 
 export default {
 	components: {
 		Swipe,
 		ArticleItem,
+		loadArticles,
 	},
 
 	data() {
@@ -78,25 +80,6 @@ export default {
 	},
 
 	methods: {
-		// 从服务器获取article数据，并绑定每次获取时的等待框
-		loadArticles(cid, page, callback) {
-				// 弹出等待框
-				this.$indicator.open({
-				text: "加载中",
-				spinnerType: "triple-bounce",
-			});
-			// 向服务器请求数据，并接收
-			axios.get("/articles", { params: { cid , page} })
-			.then(result => {
-				// 测试
-				// console.log(result);
-				// 执行接收数据后各自的业务逻辑
-				callback(result.data.results);
-				// 关闭弹出框
-				this.$indicator.close();
-			});
-		},
-
 		// 初始化时载入article
 		initNav(){
 			// 发送http请求，获取UI类别，并赋值给数组，用于显示nav
@@ -108,7 +91,7 @@ export default {
 
 			var showArticleList = articleList =>  this.article = articleList;
 			
-			this.loadArticles(cid, this.page, showArticleList);
+			loadArticles(cid, this.page, showArticleList);
 		},
 		// 当ui定义事件触发时
 		loadMoreArticle(){
@@ -128,7 +111,7 @@ export default {
 				this.article.push(...articleList);
 			};
 
-			this.loadArticles(cid, this.page, showArticleList);
+			loadArticles(cid, this.page, showArticleList);
 		},
   	},
 
@@ -147,10 +130,6 @@ export default {
 	mounted(){
 		this.initNav();
 		this.initArticleList();
-		console.log(`已设置isLogin: this.uname != ''`);
-		console.log(`console.log(this.uname) => ${this.uname}`);
-		console.log(`console.log(this.uname != '') => ${this.uname != ''}`);
-
 	},
 };
 </script>
