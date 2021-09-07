@@ -43,7 +43,7 @@ export default ({
     }
   },
   methods:{
-    ...mapMutations(["setUname"]),
+    ...mapMutations(["loginOK"]),
 
     // 验证用户名
     checkName(){
@@ -90,9 +90,10 @@ export default ({
       .then(result => {
         if(200 == result.data.code){
           alert(result.data.message);
-          this.setUname(this.uname.val);
+          this.loginOK(this.uname.val);
           // 同时存一个副本在localstorage中
           let ss = window.sessionStorage;
+          ss.setItem('islogin', true);
           ss.setItem('uname', `${this.uname.val}`);
           this.goHome();
         }else if(201 == result.data.code){

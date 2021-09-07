@@ -3,8 +3,8 @@
     <!-- 顶部header -->
     <mt-header title="首页" fixed>
       <router-link to="/register" slot="left">注册</router-link>
-      <router-link to="/login" slot="right" v-if = "isLogin">登录</router-link>
-	  <span v-else slot="right">欢迎{{uname}}</span>
+	  <span v-if = "isLogin" slot="right">欢迎{{uname}}</span>
+      <router-link to="/login" slot="right" v-else>登录</router-link>
     </mt-header>
     <!-- 导航栏 -->
     <mt-navbar class="nav" v-model="selected" fixed>
@@ -62,7 +62,7 @@ export default {
 		ArticleItem,
 		loadArticles,
 	},
-
+	
 	data() {
 		return {
 			selected: "1",
@@ -75,7 +75,6 @@ export default {
 			article: [],
 			// 存储当前的内容页数
 			page: 1,
-			isLogin: this.uname != ''
 		};
 	},
 
@@ -121,15 +120,16 @@ export default {
 			if (newval == "wode") {
 			this.$router.push("/me");
 			}
-		},
+		}
 	},
 	computed: {
-		...mapState(["uname"])
+		...mapState(["uname", "isLogin"])
 	},
 
 	mounted(){
 		this.initNav();
 		this.initArticleList();
+		console.log(this.uname, this.isLogin)
 	},
 };
 </script>
