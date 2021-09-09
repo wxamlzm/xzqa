@@ -13,6 +13,7 @@ export const loadArticles = function(cid, page, callback){
   axios.get('/articles', {params:{cid:cid, page:page}})
   .then(result => {
     callback(result.data.results);
+    console.log(result.data);
     Indicator.close();
   })
 }

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import goLogin from '@/assets/js/goLogin.js'
 
 Vue.use(Vuex)
 
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    // goLogin(context, objAjax)
   },
   modules: {
   }

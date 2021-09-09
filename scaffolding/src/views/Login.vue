@@ -83,26 +83,7 @@ export default ({
     goHome(){
       this.$router.push('/');
     },
-    // 向数据库发送post请求检验是否符合；
-    // 登录成功后页面跳转，并带着在本页面输入的用户名，到首页，并在首页可以获取到
-    goLogin(){
-      axios.post('login', `username=${this.uname.val}&password=${this.upwd.val}`)
-      .then(result => {
-        if(200 == result.data.code){
-          alert(result.data.message);
-          this.loginOK(this.uname.val);
-          // 同时存一个副本在localstorage中
-          let ss = window.sessionStorage;
-          ss.setItem('islogin', true);
-          ss.setItem('uname', `${this.uname.val}`);
-          this.goHome();
-        }else if(201 == result.data.code){
-          alert(result.data.message)
-        }else{
-          alert("未知错误，请重新尝试")
-        }
-      });
-    },
+
 
   }
 })
