@@ -9,7 +9,37 @@ const routes = [
   {
     path: '/test',
     name: 'Test',
-    component: () => import(/* webpackChunkName: "test" */ '../views/Test.vue')
+    component: () => import(/* webpackChunkName: "test" */ '../views/Test.vue'),
+    children: [
+      {
+        path: 'demo1',
+        component: () => import(/* webpackChunkName: "Demo1" */ '@/components/testing/Demo1.vue')
+      },
+      {
+        path: 'demo2',
+        component: () => import(/* webpackChunkName: "Demo2" */ '@/components/testing/Demo2.vue')
+      },
+      {
+        path: 'demo3',
+        component: () => import(/* webpackChunkName: "Demo3" */ '@/components/testing/Demo3.vue')
+      },
+      {
+        path: 'demo4',
+        component: () => import(/* webpackChunkName: "Demo4" */ '@/components/testing/Demo4.vue')
+      },
+      {
+        path: 'demo5',
+        component: () => import(/* webpackChunkName: "Demo5" */ '@/components/testing/Demo5.vue')
+      },
+      {
+        path: 'demo6',
+        component: () => import(/* webpackChunkName: "Demo6" */ '@/components/testing/Demo6.vue')
+      },
+      {
+        path: 'demo7',
+        component: () => import(/* webpackChunkName: "Demo7" */ '@/components/testing/Demo7.vue')
+      }
+    ]
   },
   {
     path: '/',
